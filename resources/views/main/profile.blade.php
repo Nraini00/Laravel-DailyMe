@@ -24,12 +24,12 @@
     
     <body style="background-color: white;">
 
-        @include('main.header')
+        @include('navbar.header')
 
         <div class="container-fluid">
             <div class="row">
             
-            @extends('main.sidenav')
+            @extends('navbar.sidenav')
             <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="height:100%; background-color:white;">
 
             <h1 class="h2 mb-0">Profile Details</h1>

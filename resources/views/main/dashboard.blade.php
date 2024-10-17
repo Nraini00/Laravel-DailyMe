@@ -28,12 +28,12 @@
     
     <body>
 
-        @include('main.header')
+        @include('navbar.header')
 
         <div class="container-fluid">
             <div class="row">
             
-            @extends('main.sidenav')
+            @extends('navbar.sidenav')
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
@@ -45,9 +45,12 @@
                     <div class="row my-4">
                         <div class="col-lg-7 col-12">
                             <div class="custom-block custom-block-balance">
-                                <small>Your Wallet Balance</small>
+                                <small>Your Account Balance</small>
 
-                                <h2 class="mt-2 mb-3">$254,800</h2>
+                               
+                                <a href="{{ route('budget.index')}}"><h2 class="mt-2 mb-3">RM {{ $balance }}</h2></a>
+                                
+
 
                                 <div class="custom-block-numbers d-flex align-items-center">
                                 </div>
@@ -77,7 +80,7 @@
                         <div class="col-lg-5 col-12">
 
                             <div class="custom-block custom-block-transactions">
-                                <h5 class="mb-4">Recent Transactions</h5>
+                                <h6 class="mb-4">Recent Transactions</h6>
 
                                 @foreach($latestTransactions as $transaction)
                                     <div class="d-flex flex-wrap align-items-center mb-4">
@@ -165,7 +168,7 @@
         var data = google.visualization.arrayToDataTable([
             ['Category', 'Total Spent (RM)'],
             @foreach($chartDataCategory as $data)
-                ['{{ $data['category'] }}', {{ $data['total_spent'] }}],
+                ['{{ $data['category'] }}',{{ $data['total_spent'] }}],
             @endforeach
         ]);
 

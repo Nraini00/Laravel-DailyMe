@@ -4,6 +4,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApparelController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,6 +15,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function() {
     Route::view('/dashboard', 'main.dashboard')->name('dashboard');
     Route::view('/profile', 'main.profile')->name('profile');
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
     
     Route::post('/update-profile-image', [UserController::class, 'updateProfileImage'])->name('updateProfileImage');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -43,7 +46,13 @@ Route::middleware('auth')->group(function() {
     Route::get('/event/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
     Route::put('/event/{event}', [EventController::class, 'update'])->name('event.update');
     
-   
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
+    Route::delete('/wallet/{wallet}', [WalletController::class, 'destroy'])->name('wallet.destroy');
+    Route::get('/wallet/{id}/edit', [WalletController::class, 'edit'])->name('wallet.edit');
+    Route::put('/wallet/{wallet}', [WalletController::class, 'update'])->name('wallet.update');
+
+    //Route::get('/dashboard', [WalletController::class, 'dashboard2'])->name('dashboard');
 
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 });

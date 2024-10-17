@@ -22,6 +22,7 @@ class Budget extends Model
         'remarks',
         'event_id',
         'apparel_id',
+        'attachment',
     ];
 
     protected $casts = [

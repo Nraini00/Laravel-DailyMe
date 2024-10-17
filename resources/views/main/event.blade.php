@@ -1,32 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Your Event</title>
 
-    @vite('resources/css/app.css')
+@include('main.index')
 
-    <!-- CSS FILES -->      
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <link href="css/bootstrap.min.css" rel="stylesheet"> 
-    <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/apexcharts.css" rel="stylesheet">
-    <link href="css/tooplate-mini-finance.css" rel="stylesheet">
-
-</head>
-
-<body style="bg-color: white;">
-
-    @include('main.header')
-
-    <div class="container-fluid">
-        <div class="row">
-        
-        @extends('main.sidenav')
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="height:100%; bg-color: white;">
 
         <!-- Here main content -->
@@ -152,6 +126,7 @@
                                     <input type="file" class="form-control" id="attachment" name="attachment" onchange="previewImage()">
                                     <div class="mt-2">
                                         <img id="attachmentPreview" src="" alt="Attachment Preview" class="img-fluid" style="max-width: 200px; display: none;">
+                                        <button type="button" id="cancelAttachment" class="btn btn-danger mt-2"  onclick="removeAttachment()">Cancel</button>
                                     </div>
                             </div>
 
@@ -184,7 +159,7 @@
                                 @if($event->attachment)
                                     <div class="mt-3">
                                         <strong>Attachment:</strong>
-                                        <img src="{{ asset('storage/' . $event->attachment) }}" alt="Attachment" class="img-fluid mt-2">
+                                        <img src="{{ asset('storage/' . $event->attachment) }}" alt="Attachment" class="img-fluid mt-2" style="height:200px;">
                                     </div>
                                 @endif
                             </div>
@@ -330,6 +305,86 @@ function myFunction() {
     }
 }
 
+function removeAttachment() {
+    const fileInput = document.getElementById('attachment');
+    const preview = document.getElementById('attachmentPreview');
+    const cancelButton = document.getElementById('cancelAttachment');
+
+    fileInput.value = ''; // Clear the file input
+    preview.src = '';
+    preview.style.display = 'none';
+    cancelButton.style.display = 'none';
+}
+
+$(document).ready(function() {
+    $("#location").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: "../location.json", // Adjust path if necessary
+                dataType: "json",
+                success: function(data) {
+                    var locations = [];
+                    $(document).ready(function() {
+                        $("#location").autocomplete({
+                            source: function(request, response) {
+                                $.ajax({
+                                    url: "../location.json", // Adjust path if necessary
+                                    dataType: "json",
+                                    success: function(data) {
+                                        var locations = [];
+                    
+                                        // Traverse through JSON data to extract locations
+                                        $.each(data.Malaysia, function(state, cities) {
+                                            $.each(cities, function(city, areas) {
+                                                // Flatten the areas into a single array
+                                                locations = locations.concat(areas);
+                                            });
+                                        });
+                    
+                                        console.log("Locations:", locations); // Debug line
+                    
+                                        // Filter locations based on user input
+                                        var filteredLocations = $.grep(locations, function(value) {
+                                            return value.toLowerCase().indexOf(request.term.toLowerCase()) !== -1;
+                                        });
+                    
+                                        console.log("Filtered Locations:", filteredLocations); // Debug line
+                                        response(filteredLocations);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Failed to load JSON:", status, error); // Debug line
+                                    }
+                                });
+                            },
+                            minLength: 2 // Minimum length of input before triggering autocomplete
+                        });
+                    });
+                    
+                    // Traverse through JSON data to extract locations
+                    $.each(data.Malaysia, function(state, citiesOrAreas) {
+                        if (Array.isArray(citiesOrAreas)) {
+                            // If citiesOrAreas is an array, it's a list of areas
+                            locations = locations.concat(citiesOrAreas);
+                        } else {
+                            // If citiesOrAreas is an object, iterate through cities
+                            $.each(citiesOrAreas, function(city, areas) {
+                                locations = locations.concat(areas);
+                            });
+                        }
+                    });
+
+                    console.log("Locations:", locations); // Debug line
+                    response(locations);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Failed to load JSON:", status, error); // Debug line
+                }
+            });
+        }
+    });
+});
+
+
 </script>
 
 
@@ -338,5 +393,4 @@ function myFunction() {
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/custom.js"></script>
 
-</body>
-</html>
+

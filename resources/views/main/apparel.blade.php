@@ -1,34 +1,6 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Your Wardrobe</title>
+@include('main.index')
 
-        @vite('resources/js/app.js')
-        @vite('resources/css/app.css')
-        
-        <!-- CSS FILES -->      
-      <!-- CSS FILES -->      
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/tooplate-mini-finance.css" rel="stylesheet">
-    
-       
-    </head>
-    
-    <body>
-
-        @include('main.header')
-
-        <div class="container-fluid">
-            <div class="row">
-            
-            @extends('main.sidenav')
             <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="height:100%;">
 
             <!-- Here main content -->
@@ -177,10 +149,11 @@
                                     <input type="file" class="form-control" id="attachment" name="attachment" onchange="previewImage()">
                                     <div class="mt-2">
                                         <img id="attachmentPreview" src="" alt="Attachment Preview" class="img-fluid" style="max-width: 200px; display: none;">
+                                        <button type="button" id="cancelAttachment" class="btn btn-danger mt-2"  onclick="removeAttachment()">Cancel</button>
                                     </div>
                                 </div>
                                 <br>
-                                <button type="submit" class="btn btn-primary">Add Apparel</button>
+                                <button type="submit" class="btn btn-primary" style="float:right;">Add Apparel</button>
                             </form>
                         </div>
                     </div>
@@ -201,7 +174,7 @@
                                 <p><strong>Color:</strong> {{ $apparel->color }}</p>
                                 <p><strong>Quantity:</strong> {{ $apparel->quantity }}</p>
                                 <p><strong>Purchase Date:</strong> {{ $apparel->purchase_date }}</p>
-                                <p><strong>Price:</strong> {{ $apparel->price }}</p>
+                                <p><strong>Price:</strong> RM {{ $apparel->price }}</p>
                                 <p><strong>Brand:</strong> {{ $apparel->brand }}</p>
                                 <p><strong>Remarks:</strong> {{ $apparel->remarks }}</p>
 
@@ -377,7 +350,15 @@ function myFunction() {
     }
 }
 
+function removeAttachment() {
+    const fileInput = document.getElementById('attachment');
+    const preview = document.getElementById('attachmentPreview');
+    const cancelButton = document.getElementById('cancelAttachment');
+
+    fileInput.value = ''; // Clear the file input
+    preview.src = '';
+    preview.style.display = 'none';
+    cancelButton.style.display = 'none';
+}
 </script>
 
-    </body>
-    </html>

@@ -1,36 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>My Expenses</title>
-
-    @vite('resources/css/app.css')
-    <!-- CSS FILES -->      
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/tooplate-mini-finance.css" rel="stylesheet">
-    
-</head>
-    
-<body>
-    @include('main.header')
-
-    <div class="container-fluid">
-        <div class="row">
-
-            @extends('main.sidenav')
+@include('main.index')
 
             <!-- Here is the main content -->
             <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                 <div class="container mt-4">
                     <h4 class="text-center">My Expenses</h4>
+                    <br>
                     <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#addExpense">Add Expense</button>
-
                     <br><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for expenses" title="Type in a name">
 
                     <table class="table table-bordered" id="myTable" style="margin-top:5px;">
@@ -168,7 +144,9 @@
                             <input type="file" class="form-control" id="attachment" name="attachment" onchange="previewImage()">
                             <div class="mt-2">
                                 <img id="attachmentPreview" src="" alt="Attachment Preview" class="img-fluid" style="max-width: 200px; display: none;">
+                                <button type="button" id="cancelAttachment" class="btn btn-danger mt-2"  onclick="removeAttachment()">Cancel</button>
                             </div>
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -192,15 +170,18 @@
                     <div class="modal-body">
                         <p><strong>Category:</strong> {{ $budget->category->name ?? 'N/A' }}</p>
                         <p><strong>Title:</strong> {{ $budget->title }}</p>
-                        <p><strong>Amount: RM</strong> {{ $budget->amount }}</p>
+                        <p><strong>Amount: </strong>RM {{ $budget->amount }}</p>
                         <p><strong>Date:</strong> {{ $budget->date }}</p>
                         <p><strong>Remarks:</strong> {{ $budget->remarks }}</p>
                         <p><strong>Event Name:</strong> {{ $budget->event->eventname ?? 'N/A' }}</p>
                         <p><strong>Apparel Name:</strong> {{ $budget->apparel->name ?? 'N/A' }}</p>
-                        <div id="modal-attachment" class="mt-3" style="display: none;">
-                            <strong>Attachment:</strong>
-                            <img id="attachment-preview" src="" alt="Attachment" class="img-fluid mt-2">
-                        </div>
+                        <!-- Display Attachment -->
+                        @if($budget->attachment)
+                                    <div class="mt-3">
+                                        <strong>Attachment:</strong>
+                                        <img src="{{ asset('storage/' . $budget->attachment) }}" alt="Attachment" class="img-fluid mt-2" style="height:200px;">
+                                    </div>
+                                @endif
                     </div>
 
                     <div class="modal-footer">
@@ -365,6 +346,17 @@ function myFunction() {
         }
     }
 }
+
+
+function removeAttachment() {
+    const fileInput = document.getElementById('attachment');
+    const preview = document.getElementById('attachmentPreview');
+    const cancelButton = document.getElementById('cancelAttachment');
+
+    fileInput.value = ''; // Clear the file input
+    preview.src = '';
+    preview.style.display = 'none';
+    cancelButton.style.display = 'none';
+}
 </script>
-</body>
-</html>
+
